@@ -1,0 +1,47 @@
+# The registry is data, not code. Jev reads the descriptions, so write them
+# as "what is this model good for". Verify OpenRouter IDs at
+# https://openrouter.ai/models and Ollama IDs against installed model tags.
+default: medium              # used if Jev is unreachable
+confidence_threshold: 0.6    # below this, escalate to the strongest eligible model
+
+models:
+  - name: ollama-local
+    provider: ollama
+    id: qwen2.5:7b
+    description: Local model with no per-token API cost. Good for private, simple tasks, short rewrites, extraction, and casual chat; capabilities depend on the installed Ollama model.
+    rank: 1
+    context_window: 32768
+
+  - name: small
+    id: anthropic/claude-haiku-4.5
+    description: Fast and cheap. Simple lookups, short rewrites, extraction, classification, casual chat.
+    rank: 2
+    context_window: 200000
+    input_cost_per_m: 1.0
+    output_cost_per_m: 5.0
+    vision: true
+
+  - name: deepseek
+    provider: openrouter
+    id: deepseek/deepseek-chat
+    description: Strong general-purpose reasoning and coding at relatively low cost. Useful for multi-step analysis and code tasks.
+    rank: 3
+    context_window: 65536
+
+  - name: medium
+    id: anthropic/claude-sonnet-4.5
+    description: Balanced. Everyday coding, summarizing long documents, structured writing, moderate analysis.
+    rank: 4
+    context_window: 200000
+    input_cost_per_m: 3.0
+    output_cost_per_m: 15.0
+    vision: true
+
+  - name: large
+    id: anthropic/claude-opus-4.5
+    description: Most capable. Hard debugging, multi-step reasoning, architecture decisions, ambiguous or high-stakes questions.
+    rank: 5
+    context_window: 200000
+    input_cost_per_m: 5.0
+    output_cost_per_m: 25.0
+    vision: true

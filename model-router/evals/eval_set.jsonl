@@ -1,0 +1,10 @@
+{"prompt": "What's the capital of Australia?", "expected": "small"}
+{"prompt": "Rewrite this sentence to be more formal: hey, can u send the report asap", "expected": "small"}
+{"prompt": "Extract the invoice number and total from: 'Invoice #4471, total due $1,280.00, net 30'", "expected": "small"}
+{"prompt": "Write a Python function that merges overlapping intervals and add unit tests.", "expected": "medium"}
+{"prompt": "Summarize the key risks in this 12-page vendor contract clause by clause.", "expected": "medium"}
+{"prompt": "Draft a launch announcement email for our new reporting dashboard, friendly but professional.", "expected": "medium"}
+{"prompt": "Our distributed job queue occasionally processes the same message twice under network partitions. Diagnose likely causes and propose a design that guarantees exactly-once effects.", "expected": "large"}
+{"prompt": "Compare event sourcing vs CRUD for a payments ledger with audit requirements, and recommend one with migration risks.", "expected": "large"}
+{"prompt": "Find the race condition in this multi-threaded cache eviction code and prove your fix is correct.", "expected": "large"}
+{"prompt": "Translate 'good morning' to Spanish.", "expected": "small"}
