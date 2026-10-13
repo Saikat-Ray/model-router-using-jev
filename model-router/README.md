@@ -18,7 +18,7 @@ OpenRouter) decides; your code owns the constraints and the policy.
 
     python -m venv .venv && source .venv/bin/activate
     pip install -e ".[dev]"
-    cp .env.example .env   # add OPENROUTER_API_KEY, then: export $(cat .env | xargs)
+    cp .env.example .env   # add OPENROUTER_API_KEY; the CLI loads .env automatically
     ollama pull qwen2.5:7b # required for the configured local Ollama model
     pytest
 
@@ -35,6 +35,9 @@ OpenRouter) decides; your code owns the constraints and the policy.
 
 ## Notes
 
+- The default `config/models.yaml` is resolved from the current directory when present,
+  otherwise from this project checkout. Relative paths passed to `--config` are still
+  resolved from the current directory.
 - The configured `ollama-local` model uses `qwen2.5:7b` at `OLLAMA_BASE_URL` (default
   `http://localhost:11434`). Change its `id` to a model tag installed in Ollama if needed.
 - The configured DeepSeek model uses OpenRouter (`deepseek/deepseek-chat`) and requires

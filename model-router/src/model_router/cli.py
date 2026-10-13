@@ -4,6 +4,8 @@ import argparse
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 from .executor import Executor
 from .jev_client import JevClient
 from .logger import DecisionLog
@@ -12,15 +14,23 @@ from .registry import Registry
 from .router import Request, Router
 
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
 def build(config: str) -> tuple[Registry, Router]:
     registry = Registry.from_yaml(config)
     return registry, Router(registry, JevClient())
 
 
 def main(argv: list[str] | None = None) -> int:
+    load_dotenv(PROJECT_ROOT / ".env")
+
     p = argparse.ArgumentParser(prog="model-router")
     p.add_argument("prompt", nargs="?", help="prompt text (reads stdin if omitted)")
-    p.add_argument("--config", default=str(Path("config/models.yaml")))
+    default_config = Path("config/models.yaml")
+    if not default_config.is_file():
+        default_config = PROJECT_ROOT / "config" / "models.yaml"
+    p.add_argument("--config", default=str(default_config))
     p.add_argument("--dry-run", action="store_true", help="route only, don't call the model")
     p.add_argument("--log", default="logs/decisions.jsonl")
     args = p.parse_args(argv)

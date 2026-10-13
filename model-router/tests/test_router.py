@@ -114,3 +114,36 @@ def test_config_includes_ollama_and_deepseek():
     assert registry.get("ollama-local").provider == "ollama"
     assert registry.get("deepseek").id == "deepseek/deepseek-chat"
     assert registry.get("deepseek").provider == "openrouter"
+
+
+def test_cli_finds_default_config_outside_project_directory(monkeypatch, tmp_path, capsys):
+    from model_router import cli
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(cli, "JevClient", lambda: Fake(ChoiceAnswer("medium", 0.9)))
+
+    assert cli.main(["--dry-run", "hi"]) == 0
+    assert "pick=medium" in capsys.readouterr().out
+
+
+def test_cli_loads_project_dotenv_before_creating_jev_client(
+    monkeypatch, tmp_path, capsys
+):
+    import os
+    from pathlib import Path
+
+    from model_router import cli
+
+    (tmp_path / ".env").write_text("OPENROUTER_API_KEY=from-dotenv\n")
+    monkeypatch.setattr(cli, "PROJECT_ROOT", tmp_path)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+
+    def make_jev_client():
+        assert os.environ["OPENROUTER_API_KEY"] == "from-dotenv"
+        return Fake(ChoiceAnswer("medium", 0.9))
+
+    monkeypatch.setattr(cli, "JevClient", make_jev_client)
+
+    config = Path(__file__).parents[1] / "config" / "models.yaml"
+    assert cli.main(["--config", str(config), "--dry-run", "hi"]) == 0
+    assert "pick=medium" in capsys.readouterr().out
